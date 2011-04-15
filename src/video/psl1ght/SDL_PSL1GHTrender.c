@@ -84,11 +84,12 @@ typedef struct
     gcmContextData *context; // Context to keep track of the RSX buffer.    
 } SDL_PSL1GHT_RenderData;
 
-static void flip( gcmContextData *context, int current_screen)
+static void flip( gcmContextData *context, s32 current_screen)
 {
     assert(gcmSetFlip(context, current_screen) == 0);
-    realityFlushBuffer(context);
-    gcmSetWaitFlip(context); // Prevent the RSX from continuing until the flip has finished.
+    rsxFlushBuffer(context);
+    // Prevent the RSX from continuing until the flip has finished.
+    gcmSetWaitFlip(context);
 }
 
 SDL_Renderer *
@@ -185,7 +186,7 @@ SDL_PSL1GHT_CreateRenderer(SDL_Window * window, Uint32 flags)
 
         u32 offset = 0;
         printf( "\t\tPrepare RSX offsets (%16X, %08X) \n", (unsigned int) data->screens[i]->pixels, (unsigned int) &offset);
-        if ( realityAddressToOffset(data->screens[i]->pixels, &offset) != 0) {
+        if ( rsxAddressToOffset(data->screens[i]->pixels, &offset) != 0) {
             printf("ERROR\n");
 //            SDL_FreeSurface(data->screens[i]);
             SDL_OutOfMemory();

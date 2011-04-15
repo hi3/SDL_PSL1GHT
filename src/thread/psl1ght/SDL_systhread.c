@@ -49,14 +49,14 @@ SDL_MaskSignals(sigset_t * omask)
         sigaddset(&mask, sig_list[i]);
     }
 	// FIXME as soom as signal are implemented in PSL1GHT
-    sigprocmask(SIG_BLOCK, &mask, omask);
+    //sigprocmask(SIG_BLOCK, &mask, omask);
 }
 
 void
 SDL_UnmaskSignals(sigset_t * omask)
 {
 	// FIXME as soom as signal are implemented in PSL1GHT
-    sigprocmask(SIG_SETMASK, omask, NULL);
+    //sigprocmask(SIG_SETMASK, omask, NULL);
 }
 
 static void
