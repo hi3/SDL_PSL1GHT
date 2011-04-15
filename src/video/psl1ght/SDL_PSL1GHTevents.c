@@ -30,40 +30,41 @@
 #include "SDL_PSL1GHTvideo.h"
 #include "SDL_PSL1GHTevents_c.h"
 
-#include <sysutil/events.h>
+//#include <sysutil/events.h>
+#include <sysutil/sysutil.h>
 
 static void eventHandle(u64 status, u64 param, void * userdata) {
     _THIS = userdata;
-    if(status == EVENT_REQUEST_EXITAPP){
-	printf("Quit game requested\n");
-	SDL_SendQuit();
-    }else if(status == EVENT_MENU_OPEN){
-	//xmb opened, should prob pause game or something :P
-    }else if(status == EVENT_MENU_CLOSE){
-	//xmb closed, and then resume
-    }else if(status == EVENT_DRAWING_BEGIN){
-    }else if(status == EVENT_DRAWING_END){
+    if(status == SYSUTIL_EXIT_GAME){
+	  printf("Quit game requested\n");
+	  SDL_SendQuit();
+    }else if(status == SYSUTIL_DRAW_BEGIN){
+    }else if(status == SYSUTIL_DRAW_END){
+    }else if(status == SYSUTIL_MENU_OPEN){
+	  //xmb opened, should prob pause game or something :P
+    }else if(status == SYSUTIL_MENU_CLOSE){
+	  //xmb closed, and then resume
     }else{
-	printf("Unhandled event: %08llX\n", (unsigned long long int)status);
+	  printf("Unhandled event: %08llX\n", (unsigned long long int)status);
     }
 }
 
 void
 PSL1GHT_PumpEvents(_THIS)
 {
-    sysCheckCallback();
+    sysUtilCheckCallback();
 }
 
 void
 PSL1GHT_InitSysEvent(_THIS)
 {
-    sysRegisterCallback(EVENT_SLOT0, eventHandle, _this);
+    sysUtilRegisterCallback(SYSUTIL_EVENT_SLOT0, eventHandle, _this);
 }
 
 void
 PSL1GHT_QuitSysEvent(_THIS)
 {
-    sysUnregisterCallback(EVENT_SLOT0);
+    sysUtilUnregisterCallback(SYSUTIL_EVENT_SLOT0);
 }
 
 /* vi: set ts=4 sw=4 expandtab: */

@@ -79,7 +79,7 @@ PSL1GHT_AUD_OpenDevice(_THIS, const char *devname, int iscapture)
 	//8 16 or 32 block buffer
 	_params.numBlocks = AUDIO_BLOCK_8;
 	//extended attributes
-	_params.attr = 0;
+	_params.attrib = 0;
 	//sound level (1 is default)
 	_params.level = 1;
 

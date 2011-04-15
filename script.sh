@@ -1,39 +1,55 @@
 #!/bin/sh
 # zlib-1.2.5.sh by Dan Peori (danpeori@oopo.net)
-
 #newlib doesn't define endian.h that is needed by SDL
 
-if [ ! -f $PS3DEV/host/ppu/ppu/include/endian.h ]
-then
-	cat > $PS3DEV/host/ppu/ppu/include/endian.h << EOF
-#ifndef	_ENDIAN_H
-#define	_ENDIAN_H
+if [ ! -f $PS3DEV/ppu/ppu/include/machine/endian.h ]; then
+  cat > $PS3DEV/ppu/ppu/include/machine/endian.h << EOF
+#ifndef __MACHINE_ENDIAN_H__
 
-#define	__LITTLE_ENDIAN	1234
-#define	__BIG_ENDIAN	4321
+#include <sys/config.h>
 
-/* PPC is big endian */
-#define __BYTE_ORDER __BIG_ENDIAN
-
+#ifndef BIG_ENDIAN
+#define BIG_ENDIAN 4321
+#endif
+#ifndef LITTLE_ENDIAN
+#define LITTLE_ENDIAN 1234
 #endif
 
-EOF
+#ifndef BYTE_ORDER
+#if defined(__IEEE_LITTLE_ENDIAN) || defined(__IEEE_BYTES_LITTLE_ENDIAN)
+#define BYTE_ORDER LITTLE_ENDIAN
+#else
+#define BYTE_ORDER BIG_ENDIAN
+#endif
+#endif
 
+#endif /* __MACHINE_ENDIAN_H__ */
+EOF
 fi
 
-if [ -f Makefile ]
-then
-	make clean
+if [ -f Makefile ]; then
+  make clean
 fi
 
 ./autogen.sh
 
 ## Configure the build.
-AR="ppu-ar" CC="ppu-gcc" CFLAGS="-O2 -Wall" RANLIB="ppu-ranlib" ./configure \
-	--prefix="$PS3DEV/host/ppu" --host=ppu-psl1ght \
-	--includedir="$PSL1GHT/target/include" --libdir="$PSL1GHT/target/lib" \
-	--enable-atomic=yes --enable-video-psl1ght=yes --enable-joystick=yes --enable-audio=yes\
-	|| { exit 1; }
+AR="ppu-ar" \
+CC="ppu-gcc" \
+RANLIB="ppu-ranlib" \
+CFLAGS="-O2 -Wall -I$PSL1GHT/ppu/include -I$PS3DEV/portlibs/ppu/include" \
+LDFLAGS="-L$PSL1GHT/ppu/lib -L$PS3DEV/portlibs/ppu/lib -lrt -llv2" \
+PKG_CONFIG_PATH="$PS3DEV/portlibs/ppu/lib/pkgconfig" \
+./configure \
+  --prefix="$PS3DEV/portlibs/ppu" \
+  --host=ppu \
+  --includedir="$PS3DEV/portlibs/ppu/include" \
+  --libdir="$PS3DEV/portlibs/ppu/lib" \
+  --enable-atomic=yes \
+  --enable-video-psl1ght=yes \
+  --enable-joystick=yes \
+  --enable-audio=yes \
+  || { exit 1; }
 
 ## Compile and install.
 #make -j4 && make install || { exit 1; }

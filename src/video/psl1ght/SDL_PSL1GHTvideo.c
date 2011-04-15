@@ -43,8 +43,7 @@
 #include <malloc.h>
 #include <assert.h>
 
-#include <rsx/reality.h>
-#include <rsx/gcm.h>
+#include <rsx/rsx.h>
 
 #define PSL1GHTVID_DRIVER_NAME "psl1ght"
 

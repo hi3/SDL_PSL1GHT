@@ -28,7 +28,8 @@
 
 #include "SDL_PSL1GHTvideo.h"
 
-#include <rsx/reality.h>
+#include <rsx/rsx.h>
+
 #include <unistd.h>
 #include <assert.h>
 
