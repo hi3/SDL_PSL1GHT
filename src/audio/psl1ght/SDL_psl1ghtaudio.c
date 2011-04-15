@@ -153,7 +153,7 @@ PSL1GHT_AUD_CloseDevice(_THIS)
 	deprintf("audioRemoveNotifyEventQueue: %d\n",ret);
 	ret=audioPortClose(_portNum);
 	deprintf("audioPortClose: %d\n",ret);
-	ret=ysEventQueueDestroy, 0);
+	ret=sysEventQueueDestroy(_snd_queue, 0);
 	deprintf("sysEventQueueDestroy: %d\n",ret);
 	ret=audioQuit();
 	deprintf("audioQuit: %d\n",ret);
