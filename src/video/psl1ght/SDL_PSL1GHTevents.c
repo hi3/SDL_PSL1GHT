@@ -30,22 +30,21 @@
 #include "SDL_PSL1GHTvideo.h"
 #include "SDL_PSL1GHTevents_c.h"
 
-//#include <sysutil/events.h>
 #include <sysutil/sysutil.h>
 
 static void eventHandle(u64 status, u64 param, void * userdata) {
     _THIS = userdata;
     if(status == SYSUTIL_EXIT_GAME){
-	  printf("Quit game requested\n");
-	  SDL_SendQuit();
+      printf("Quit game requested\n");
+      SDL_SendQuit();
+    }else if(status == SYSUTIL_MENU_OPEN){
+      //xmb opened, should prob pause game or something :P
+    }else if(status == SYSUTIL_MENU_CLOSE){
+      //xmb closed, and then resume
     }else if(status == SYSUTIL_DRAW_BEGIN){
     }else if(status == SYSUTIL_DRAW_END){
-    }else if(status == SYSUTIL_MENU_OPEN){
-	  //xmb opened, should prob pause game or something :P
-    }else if(status == SYSUTIL_MENU_CLOSE){
-	  //xmb closed, and then resume
     }else{
-	  printf("Unhandled event: %08llX\n", (unsigned long long int)status);
+      printf("Unhandled event: %08llX\n", (unsigned long long int)status);
     }
 }
 

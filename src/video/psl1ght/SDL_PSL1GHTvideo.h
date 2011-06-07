@@ -54,7 +54,7 @@
 /* Private RSX data */
 typedef struct SDL_DeviceData
 {
-    gcmContextData *_CommandBuffer; // Context to keep track of the RSX buffer.	
+    gcmContextData *_CommandBuffer; // Context to keep track of the RSX buffer.
 } SDL_DeviceData;
 
 typedef struct SDL_DisplayModeData

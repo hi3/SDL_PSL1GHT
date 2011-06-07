@@ -81,15 +81,21 @@ typedef struct
 {
     int current_screen;
     SDL_Surface *screens[3];
-    gcmContextData *context; // Context to keep track of the RSX buffer.    
+    gcmContextData *context; // Context to keep track of the RSX buffer.
 } SDL_PSL1GHT_RenderData;
 
-static void flip( gcmContextData *context, s32 current_screen)
+static void flip( gcmContextData *context, int current_screen)
 {
     assert(gcmSetFlip(context, current_screen) == 0);
     rsxFlushBuffer(context);
-    // Prevent the RSX from continuing until the flip has finished.
-    gcmSetWaitFlip(context);
+    gcmSetWaitFlip(context); // Prevent the RSX from continuing until the flip has finished.
+}
+
+static void waitFlip()
+{
+    while(gcmGetFlipStatus() != 0)
+      usleep(200);
+    gcmResetFlipStatus();
 }
 
 SDL_Renderer *
@@ -103,7 +109,7 @@ SDL_PSL1GHT_CreateRenderer(SDL_Window * window, Uint32 flags)
     int bpp;
     Uint32 Rmask, Gmask, Bmask, Amask;
 
-    printf( "SDL_PSL1GHT_CreateRenderer( %016X, %08X)\n", (unsigned long long) window, flags);
+    printf( "SDL_PSL1GHT_CreateRenderer(%016X, %08X)\n", (unsigned long long)window, flags);
 
     if (!SDL_PixelFormatEnumToMasks
         (displayMode->format, &bpp, &Rmask, &Gmask, &Bmask, &Amask)) {
@@ -176,7 +182,7 @@ SDL_PSL1GHT_CreateRenderer(SDL_Window * window, Uint32 flags)
         printf( "\t\tAllocate RSX memory for pixels\n");
         /* Allocate RSX memory for pixels */
         SDL_free(data->screens[i]->pixels);
-        data->screens[i]->pixels = rsxMemAlign(16, data->screens[i]->h * data->screens[i]->pitch);
+        data->screens[i]->pixels = rsxMemalign(64, data->screens[i]->h * data->screens[i]->pitch);
         if (!data->screens[i]->pixels) {
             printf("ERROR\n");
             SDL_FreeSurface(data->screens[i]);
@@ -185,7 +191,7 @@ SDL_PSL1GHT_CreateRenderer(SDL_Window * window, Uint32 flags)
         }
 
         u32 offset = 0;
-        printf( "\t\tPrepare RSX offsets (%16X, %08X) \n", (unsigned int) data->screens[i]->pixels, (unsigned int) &offset);
+        printf( "\t\tPrepare RSX offsets (%016X, %08X) \n", (unsigned int)data->screens[i]->pixels, (unsigned int)&offset);
         if ( rsxAddressToOffset(data->screens[i]->pixels, &offset) != 0) {
             printf("ERROR\n");
 //            SDL_FreeSurface(data->screens[i]);
@@ -204,11 +210,11 @@ SDL_PSL1GHT_CreateRenderer(SDL_Window * window, Uint32 flags)
         SDL_SetSurfacePalette(data->screens[i], display->palette);
     }
     data->current_screen = 0;
-
     printf( "\tReset Flip Status\n");
     gcmResetFlipStatus();
     printf( "\tFinished\n");
     flip(data->context, data->current_screen);
+    waitFlip();
     return renderer;
 }
 
@@ -337,7 +343,7 @@ SDL_PSL1GHT_RenderCopy(SDL_Renderer * renderer, SDL_Texture * texture,
         Uint8 *src, *dst;
         int row;
         size_t length;
-        Uint8 *dstpixels;
+        //Uint8 *dstpixels;
 
         src = (Uint8 *)((SDL_Surface *)texture->driverdata)->pixels;
         dst = (Uint8 *) data->screens[data->current_screen]->pixels + dstrect->y * data->screens[data->current_screen]->pitch + dstrect->x
@@ -413,24 +419,22 @@ SDL_PSL1GHT_RenderPresent(SDL_Renderer * renderer)
 
     printf( "SDL_PSL1GHT_RenderPresent()\n");
 
-    printf( "\tRendering to screen %d\n", data->current_screen);
+    printf( "\tRendering to screen: %d\n", data->current_screen);
 
-    printf( "\tWait for vsync\n");
+    /* Page flip */
+    printf( "\tPage flip: %d\n", data->current_screen);
+    flip(data->context, data->current_screen);
+
     /* Wait for vsync */
     //if (renderer->info.flags & SDL_RENDERER_PRESENTVSYNC) {
-        while(gcmGetFlipStatus() != 0)
-            usleep(200);
-        gcmResetFlipStatus();
+    printf( "\tWait for vsync: %d\n", data->current_screen);
+    waitFlip();
     //}
-
-    printf( "\tPage flip\n");
-    /* Page flip */
-    flip(data->context, data->current_screen);
 
     printf( "\tUpdate the flipping chain, if any\n");
     /* Update the flipping chain, if any */
     //if (renderer->info.flags & SDL_RENDERER_PRESENTFLIP2) {
-        data->current_screen = (data->current_screen + 1) % 2;
+    data->current_screen = (data->current_screen + 1) % 2;
     /*} else if (renderer->info.flags & SDL_RENDERER_PRESENTFLIP3) {
         data->current_screen = (data->current_screen + 1) % 3;
     }*/

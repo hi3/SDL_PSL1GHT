@@ -57,7 +57,8 @@ PSL1GHT_InitModes(_THIS)
 
     modedata->vconfig.resolution = state.displayMode.resolution;
     modedata->vconfig.format = VIDEO_BUFFER_FORMAT_XRGB;
-    modedata->vconfig.pitch = res.width * 4;
+    modedata->vconfig.pitch = res.width * sizeof(uint_32t);
+    modedata->vconfig.aspect = state.displayMode.aspect;
     mode.driverdata = modedata;
 
     /* Setup the display to it's  default mode */
@@ -67,7 +68,7 @@ PSL1GHT_InitModes(_THIS)
 	do{
 		SDL_Delay(10);
 		assert( videoGetState(0, 0, &state) == 0);
-	}while ( state.state == 3);
+	}while (state.state == VIDEO_STATE_BUSY);
 
     /* Set display's videomode and add it */
     SDL_AddBasicVideoDisplay(&mode);

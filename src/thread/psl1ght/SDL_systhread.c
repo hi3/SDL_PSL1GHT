@@ -60,9 +60,9 @@ SDL_UnmaskSignals(sigset_t * omask)
 }
 
 static void
-RunThread(u64 arg)
+RunThread(void *arg)
 {
-    SDL_RunThread((void *)arg);
+    SDL_RunThread(arg);
 	sysThreadExit(0);
 }
 
@@ -70,15 +70,16 @@ int
 SDL_SYS_CreateThread(SDL_Thread * thread, void *args)
 {
 	sys_ppu_thread_t id;
-	size_t stack_size = 0x1000;
+	size_t stack_size = 0x4000;
 	u64 priority = 1500;
 
     /* Create the thread and go! */
-	int s = sysThreadCreate(	&id, RunThread, (u64)args, priority, stack_size, THREAD_JOINABLE, "SDL");
+	int s = sysThreadCreate(&id, RunThread, args, priority, stack_size, THREAD_JOINABLE, "SDL");
     thread->handle = id;
 
     if ( s != 0)
 	{
+        printf("sysThreadCreate() non-zero: %d", s);
         SDL_SetError("Not enough resources to create thread");
         return (-1);
     }
@@ -97,7 +98,12 @@ SDL_threadID
 SDL_ThreadID(void)
 {
 	sys_ppu_thread_t id;
-	sysThreadGetId(&id);
+
+    int s = sysThreadGetId(&id);
+    if ( s != 0)
+    {
+        printf("sysThreadGetId() non-zero: %d", s);
+    }   
     return ((SDL_threadID) id);
 }
 
@@ -107,6 +113,10 @@ SDL_SYS_WaitThread(SDL_Thread * thread)
 	u64 retval;
 
 	int t = sysThreadJoin(thread->handle, &retval);
+    if ( t != 0)
+    {
+        printf("sysThreadJoin() non-zero: %d", t);
+    }
 }
 
 /* vi: set ts=4 sw=4 expandtab: */

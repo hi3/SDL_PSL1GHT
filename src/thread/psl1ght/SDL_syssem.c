@@ -44,7 +44,7 @@ SDL_CreateSemaphore(Uint32 initial_value)
 
 	SDL_zero( attr);
 	attr.attr_protocol = SYS_SEM_ATTR_PROTOCOL;
-	attr.attr_pshared = SYS_SEM_ATTR_PSHARED;   
+	attr.attr_pshared = SYS_SEM_ATTR_PSHARED;
 
 	sem = (SDL_sem *) SDL_malloc(sizeof(*sem));
 	if (sem) {
