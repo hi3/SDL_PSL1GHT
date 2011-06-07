@@ -57,7 +57,7 @@ PSL1GHT_InitModes(_THIS)
 
     modedata->vconfig.resolution = state.displayMode.resolution;
     modedata->vconfig.format = VIDEO_BUFFER_FORMAT_XRGB;
-    modedata->vconfig.pitch = res.width * sizeof(uint_32t);
+    modedata->vconfig.pitch = res.width * sizeof(u32);
     modedata->vconfig.aspect = state.displayMode.aspect;
     mode.driverdata = modedata;
 
