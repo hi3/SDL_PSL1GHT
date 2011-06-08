@@ -81,6 +81,7 @@ static SDL_DisplayMode ps3fb_modedb[] = {
     /* Native resolutions (progressive, "fullscreen") */
     {SDL_PIXELFORMAT_ARGB8888, 1920, 1080, 0, NULL}, // 1080p
     {SDL_PIXELFORMAT_ARGB8888, 1280, 720, 0, NULL}, // 720p
+    {SDL_PIXELFORMAT_ARGB8888, 720, 576, 0, NULL}, // 576p
     {SDL_PIXELFORMAT_ARGB8888, 720, 480, 0, NULL}, // 480p
 };
 
@@ -100,6 +101,13 @@ static PSL1GHT_DisplayModeData ps3fb_data[] = {
 		VIDEO_ASPECT_16_9, 
 		{0, 0, 0, 0, 0, 0, 0, 0, 0},
 		1280 * 4
+	}},
+	{{
+		VIDEO_RESOLUTION_576, 
+		VIDEO_BUFFER_FORMAT_XRGB,
+		VIDEO_ASPECT_16_9, 
+		{0, 0, 0, 0, 0, 0, 0, 0, 0},
+		720 * 4
 	}},
 	{{
 		VIDEO_RESOLUTION_480, 

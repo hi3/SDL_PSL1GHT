@@ -79,7 +79,7 @@ SDL_SYS_CreateThread(SDL_Thread * thread, void *args)
 
     if ( s != 0)
 	{
-        printf("sysThreadCreate() non-zero: %d", s);
+        deprintf (1, "sysThreadCreate() non-zero: %d", s);
         SDL_SetError("Not enough resources to create thread");
         return (-1);
     }
@@ -102,7 +102,7 @@ SDL_ThreadID(void)
     int s = sysThreadGetId(&id);
     if ( s != 0)
     {
-        printf("sysThreadGetId() non-zero: %d", s);
+        deprintf (1, "sysThreadGetId() non-zero: %d", s);
     }   
     return ((SDL_threadID) id);
 }
@@ -115,7 +115,7 @@ SDL_SYS_WaitThread(SDL_Thread * thread)
 	int t = sysThreadJoin(thread->handle, &retval);
     if ( t != 0)
     {
-        printf("sysThreadJoin() non-zero: %d", t);
+        deprintf(1, "sysThreadJoin() non-zero: %d", t);
     }
 }
 

@@ -1,5 +1,5 @@
 #!/bin/sh
-# zlib-1.2.5.sh by Dan Peori (danpeori@oopo.net)
+# SDL 1.2
 
 if [ -f Makefile ]; then
   make clean
