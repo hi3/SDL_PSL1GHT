@@ -97,15 +97,15 @@ PSL1GHT_AUD_OpenDevice(_THIS, const char *devname, int iscapture)
 
 	// create an event queue that will tell when a block is read
 	ret=audioCreateNotifyEventQueue( &_snd_queue, &_snd_queue_key);
-	printf("audioCreateNotifyEventQueue: %d\n",ret);
+	deprintf("audioCreateNotifyEventQueue: %d\n",ret);
 
 	// Set it to the sprx
 	ret = audioSetNotifyEventQueue(_snd_queue_key);
-	printf("audioSetNotifyEventQueue: %d\n",ret);
+	deprintf("audioSetNotifyEventQueue: %d\n",ret);
 
 	// clears the event queue
 	ret = sysEventQueueDrain(_snd_queue);
-	printf("sysEventQueueDrain: %d\n",ret);
+	deprintf("sysEventQueueDrain: %d\n",ret);
 
 	ret=audioPortStart(_portNum);
 	deprintf("audioPortStart: %d\n",ret);
@@ -186,7 +186,7 @@ ALSA_WaitDevice(_THIS)
 	
 	sys_event_t event;
 	s32 ret = sysEventQueueReceive( _snd_queue, &event, 20 * 1000);
-	//deprintf( "sysEventQueueReceive: %08X\n", ret);
+	deprintf( "sysEventQueueReceive: %08X\n", ret);
 }
 
 

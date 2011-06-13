@@ -22,6 +22,20 @@
 #include "SDL_config.h"
 
 #include "SDL_PSL1GHTvideo.h"
+#include <io/kb.h>
+#include "keydata.h"
+
+struct _keyboard
+{
+    uint32_t have;
+    uint32_t check;
+
+    KbMkey modifiers;
+    KbLed leds;
+    uint8_t state[PS3_MAX_KEYS];
+} Keyboard;
+
+extern void PSL1GHT_KEYBOARD_Process();
 
 extern void PSL1GHT_PumpEvents(_THIS);
 extern void PSL1GHT_InitSysEvent(_THIS);

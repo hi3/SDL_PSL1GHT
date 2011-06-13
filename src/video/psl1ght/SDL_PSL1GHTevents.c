@@ -73,6 +73,7 @@ void
 PSL1GHT_PumpEvents(_THIS)
 {
     sysUtilCheckCallback();
+    PSL1GHT_KEYBOARD_Process();
 }
 
 void

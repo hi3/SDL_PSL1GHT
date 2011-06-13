@@ -33,6 +33,27 @@
 #include "../SDL_thread_c.h"
 #include "../SDL_systhread.h"
 
+/* Debugging
+ * 0: No debug messages
+ * 1: Video debug messages
+ * 2: SPE debug messages
+ * 3: Memory adresses
+ */
+#define THREAD_DEBUG_LEVEL 0
+
+#ifdef THREAD_DEBUG_LEVEL
+#define deprintf( level, fmt, args... ) \
+    do \
+{ \
+    if ( (unsigned)(level) <= THREAD_DEBUG_LEVEL ) \
+    { \
+        fprintf( stdout, fmt, ##args ); \
+        fflush( stdout ); \
+    } \
+} while ( 0 )
+#else
+#define deprintf( level, fmt, args... )
+#endif
 
 static int sig_list[] = {
     SIGHUP, SIGINT, SIGQUIT, SIGPIPE, SIGALRM, SIGTERM, SIGWINCH, 0
