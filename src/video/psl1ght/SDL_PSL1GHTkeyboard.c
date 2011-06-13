@@ -29,6 +29,28 @@
 #define PS3_MAX_MODS		8
 #define KB_STATUS_CONNECTED	1
 
+/* Debugging
+ * 0: No debug messages
+ * 1: Video debug messages
+ * 2: SPE debug messages
+ * 3: Memory adresses
+ */
+#define KEYBOARD_DEBUG_LEVEL 0
+
+#ifdef KEYBOARD_DEBUG_LEVEL
+#define deprintf( level, fmt, args... ) \
+    do \
+{ \
+    if ( (unsigned)(level) <= KEYBOARD_DEBUG_LEVEL ) \
+    { \
+        fprintf( stdout, fmt, ##args ); \
+        fflush( stdout ); \
+    } \
+} while ( 0 )
+#else
+#define deprintf( level, fmt, args... )
+#endif
+
 /* Map PS3 modifier keys to SDL modifier keys */
 static const SDLKey ModifierMap[PS3_MAX_MODS] = {SDLK_LCTRL, SDLK_LSHIFT, SDLK_LALT, SDLK_LSUPER, SDLK_RCTRL, SDLK_RSHIFT, SDLK_RALT, SDLK_RSUPER};
 
