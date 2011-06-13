@@ -38,22 +38,22 @@ enum HID_ID
 typedef struct
 {
     const char* name;
+    SDL_scancode scancode;
     SDLKey symbol;
-    int modifier;
+    Uint16 modifier;
     enum HID_ID HIDID;
-    uint32_t scancode;
 } PSL1GHT_Key;
 
 #define PS3_MAX_KEYS    140
 
 const PSL1GHT_Key* PSL1GHT_GetKeyFromHID(enum HID_ID hid);
 const PSL1GHT_Key* PSL1GHT_GetKeyFromSDLK(SDLKey key);
-void PSL1GHT_DoKeyEvent (enum HID_ID hid, uint32_t state, KbMkey ps3key, KbLed ps3led);
-void PSL1GHT_DoKeyEventSDLK(enum HID_ID hid, uint32_t state, uint32_t aUnicode);
-void PSL1GHT_DoModifierEvent(SDLKey skey, uint32_t state);
+void PSL1GHT_DoKeyEvent (enum HID_ID hid, Uint8 state, KbMkey ps3key, KbLed ps3led);
+void PSL1GHT_DoKeyEventSDLK(enum HID_ID hid, Uint8 state, uint32_t unicode);
+void PSL1GHT_DoModifierEvent(SDLKey skey, Uint8 state);
 
 //void PSL1GHT_ReleaseAllMouseButtons();
-//void PSL1GHT_DoMouseEvent(uint32_t aButton, uint32_t state);
+//void PSL1GHT_DoMouseEvent(uint32_t aButton, Uint8 state);
 
 #endif
 

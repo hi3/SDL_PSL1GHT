@@ -179,7 +179,7 @@ static const PSL1GHT_Key PSL1GHT_KeyMap[] =
 
 /* Helpers */
 static void
-FillKeysym (SDL_keysym* keysym, SDLKey key, uint32_t scancode)
+FillKeysym (SDL_keysym* keysym, SDLKey key, SDL_scancode scancode)
 {
     memset(keysym, 0, sizeof(SDL_keysym));
     keysym->scancode = scancode;
@@ -214,46 +214,46 @@ PSL1GHT_GetKeyFromSDLK (SDLKey key)
 }
 
 void
-PSL1GHT_DoKeyEvent (enum HID_ID hid, uint32_t state, KbMkey ps3key, KbLed ps3led)
-//PSL1GHT_DoKeyEvent (enum HID_ID hid, uint32_t state, uint32_t ps3key, uint32_t ps3led)
+PSL1GHT_DoKeyEvent (enum HID_ID hid, Uint8 state, KbMkey ps3key, KbLed ps3led)
 {
-    //int SDL_TranslateUNICODE = 0;
-    const PSL1GHT_Key* key = PSL1GHT_GetKeyFromHID(hid);
-/*
     SDL_keysym sym;
+    int SDL_TranslateUNICODE = 0;
+
+    const PSL1GHT_Key* key = PSL1GHT_GetKeyFromHID(hid);
     FillKeysym(&sym, key->symbol, key->scancode);
 
     if(SDL_TranslateUNICODE)
     {
         sym.unicode = ioKbCnvRawCode(KB_MAPPING_101, ps3key, ps3led, key->HIDID);
     }
-*/
-    SDL_SendKeyboardKey(state, key->scancode);
+
+    SDL_SendKeyboardKey(state, sym.scancode);
 }
 
 void
-PSL1GHT_DoKeyEventSDLK (enum HID_ID hid, uint32_t state, uint32_t unicode)
+PSL1GHT_DoKeyEventSDLK (enum HID_ID hid, Uint8 state, uint32_t unicode)
 {
-    //int SDL_TranslateUNICODE = 0;
-    const PSL1GHT_Key* key = PSL1GHT_GetKeyFromHID(hid);
-/*
     SDL_keysym sym;
+    int SDL_TranslateUNICODE = 0;
+
+    const PSL1GHT_Key* key = PSL1GHT_GetKeyFromHID(hid);
     FillKeysym(&sym, key->symbol, key->scancode);
 
     if(SDL_TranslateUNICODE)
     {
         sym.unicode = unicode;
     }
-*/
-    SDL_SendKeyboardKey(state, key->scancode);
+
+    SDL_SendKeyboardKey(state, sym.scancode);
 }
 
 void
-PSL1GHT_DoModifierEvent (SDLKey skey, uint32_t state)
+PSL1GHT_DoModifierEvent (SDLKey skey, Uint8 state)
 {
-    //SDL_keysym sym;
-    //FillKeysym(&sym, key, 0);
+    SDL_keysym sym;
+
     const PSL1GHT_Key* key = PSL1GHT_GetKeyFromSDLK(skey);
-    SDL_SendKeyboardKey(state, key->scancode);
+    FillKeysym(&sym, key->symbol, 0);
+    SDL_SendKeyboardKey(state, sym.scancode);
 }
 

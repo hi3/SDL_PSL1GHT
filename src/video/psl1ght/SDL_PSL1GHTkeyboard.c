@@ -85,7 +85,7 @@ ProcessKeys (uint32_t length, uint16_t* data)
     /* Only process if the list has data, and the list isn't rollover (too many keys pressed at once) */
     if(length && data[0] != 1)
     {
-        uint8_t curstate[PS3_MAX_KEYS];
+        Uint8 curstate[PS3_MAX_KEYS];
         memset(curstate, 0, PS3_MAX_KEYS);
 
         /* Get list of keys down, data[0] == 0 means all keys are released */

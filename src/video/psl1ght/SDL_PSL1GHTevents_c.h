@@ -32,7 +32,7 @@ struct _keyboard
 
     KbMkey modifiers;
     KbLed leds;
-    uint8_t state[PS3_MAX_KEYS];
+    Uint8 state[PS3_MAX_KEYS];
 } Keyboard;
 
 extern void PSL1GHT_KEYBOARD_Process();
